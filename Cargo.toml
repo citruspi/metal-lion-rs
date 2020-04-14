@@ -7,3 +7,14 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+tokio = { version = "0.2", features = ["macros"] }
+clap = "2.33.0"
+log = "0.4.8"
+htmlescape = "0.3.1"
+minutiae = { git = "https://src.doom.fm/citruspi/minutiae.git", branch = "master" }
+pretty_env_logger = "0.4.0"
+rust-embed = "5.5.1"
+serde = "1.0.106"
+serde_derive = "1.0.106"
+serde_json = "1.0.51"
+warp = "0.2.2"
