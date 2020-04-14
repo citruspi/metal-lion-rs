@@ -1,0 +1,9 @@
+[package]
+name = "badger"
+version = "0.1.0"
+authors = ["Mihir Singh <git.service@mihirsingh.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
