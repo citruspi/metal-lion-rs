@@ -583,7 +583,7 @@ dependencies = [
 [[package]]
 name = "minutiae"
 version = "0.1.0"
-source = "git+https://src.doom.fm/citruspi/minutiae.git#577fb285687e5e25cad67633ccf35a6031b2447b"
+source = "git+https://src.doom.fm/citruspi/minutiae.git#502be6ce5835f457819011ca8bc6625b1d386ee1"
 dependencies = [
  "clap",
  "log 0.4.8",
