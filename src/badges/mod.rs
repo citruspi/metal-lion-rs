@@ -2,6 +2,8 @@
 pub struct SvgBadgeInput {
     pub title: String,
     pub text: String,
+    pub font_face: Option<minutiae::FontFace>,
+    pub font_size: Option<minutiae::FontSize>,
 }
 
 #[derive(Clone)]
