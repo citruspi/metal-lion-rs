@@ -1,3 +1,5 @@
+use htmlescape as escape;
+
 #[derive(Debug, Deserialize)]
 pub struct SvgBadgeInput {
     pub title: String,
@@ -17,6 +19,14 @@ impl SvgBadgeInput {
         self.validate_font(factory)
             .and(self.validate_colours())
             .and(self.validate_padding())
+            .and(self.sanitize_input())
+    }
+
+    pub fn sanitize_input(&mut self) -> Result<(), String> {
+        self.title = escape::encode_minimal(&self.title);
+        self.text = escape::encode_minimal(&self.text);
+
+        Ok(())
     }
 
     pub fn validate_padding(&mut self) -> Result<(), String> {
