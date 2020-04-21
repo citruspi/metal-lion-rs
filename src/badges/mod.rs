@@ -8,11 +8,28 @@ pub struct SvgBadgeInput {
     pub text_bg_colour: Option<String>,
     pub font_face: Option<minutiae::FontFace>,
     pub font_size: Option<minutiae::FontSize>,
+    pub padding_horizontal: Option<i32>,
+    pub padding_vertical: Option<i32>,
 }
 
 impl SvgBadgeInput {
     pub fn validate_n_populate(&mut self, factory: &Factory) -> Result<(), String> {
-        self.validate_font(factory).and(self.validate_colours())
+        self.validate_font(factory)
+            .and(self.validate_colours())
+            .and(self.validate_padding())
+    }
+
+    pub fn validate_padding(&mut self) -> Result<(), String> {
+        if self.padding_horizontal.is_none() {
+            self.padding_horizontal =
+                Option::from(self.font_size.unwrap().parse::<i32>().unwrap() / 2)
+        }
+
+        if self.padding_vertical.is_none() {
+            self.padding_vertical = Option::from(0)
+        }
+
+        Ok(())
     }
 
     pub fn validate_font(&mut self, f: &Factory) -> Result<(), String> {
