@@ -1,0 +1,22 @@
+default:
+  image:
+    name: rust:1.42.0
+  tags:
+    - shared-exec-docker
+
+stages:
+  - check
+  - assets
+  - build
+
+rust_fmt:
+  stage: check
+  before_script:
+    - rustup component add rustfmt
+  script:
+    - cargo fmt -- --check
+
+compile:
+  stage: build
+  script:
+    - cargo build
