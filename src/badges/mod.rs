@@ -6,6 +6,30 @@ pub struct SvgBadgeInput {
     pub font_size: Option<minutiae::FontSize>,
 }
 
+impl SvgBadgeInput {
+    pub fn validate_n_populate(&mut self, factory: &Factory) -> Result<(), String> {
+        self.validate_font(factory)
+    }
+
+    pub fn validate_font(&mut self, f: &Factory) -> Result<(), String> {
+        if self.font_face.is_none() {
+            self.font_face = Option::from(f.default_font_face());
+        }
+
+        if self.font_size.is_none() {
+            self.font_size = Option::from(f.default_font_size());
+        }
+
+        match f.supports_font(
+            self.font_face.clone().unwrap(),
+            self.font_size.clone().unwrap(),
+        ) {
+            true => Ok(()),
+            false => Err("unsupported font".into()),
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct FactoryOptions {
     pub render_dataset: minutiae::DataSet,
@@ -36,7 +60,13 @@ impl Factory {
             && self.opts.render_dataset.config.font.sizes.contains(&size)
     }
 
-    pub fn render_svg(&self, input: SvgBadgeInput) -> String {
+    pub fn render_svg(&self, mut input: SvgBadgeInput) -> Result<String, String> {
+        let r = input.validate_n_populate(self);
+
+        if r.is_err() {
+            return Err(r.err().unwrap());
+        }
+
         let bbox = self.opts.render_dataset.bounding_box(
             &format!("{} - {}", input.title, input.text),
             minutiae::BoundingBoxRenderOptions {
@@ -46,8 +76,8 @@ impl Factory {
         );
 
         match bbox {
-            Some(v) => format!("{} - {} ({} x {})", input.title, input.text, v[0], v[1]).into(),
-            None => "failed to render badge".into(),
+            Some(v) => Ok(format!("{} - {} ({} x {})", input.title, input.text, v[0], v[1]).into()),
+            None => Err("failed to render badge".into()),
         }
     }
 }

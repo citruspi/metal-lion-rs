@@ -24,14 +24,10 @@ pub async fn render_svg_badge(
 ) -> Result<impl Reply, Rejection> {
     let res: Response;
 
-    res = Response::new(
-        factory
-            .render_svg(badges::SvgBadgeInput {
-                title: input.title.into(),
-                text: input.text.into(),
-            })
-            .into(),
-    );
+    match factory.render_svg(input) {
+        Ok(badge) => res = Response::new(badge.into()),
+        Err(err) => res = Response::new(err.into()),
+    };
 
     Ok(res)
 }
