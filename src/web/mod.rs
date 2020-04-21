@@ -1,7 +1,9 @@
 use std::net::SocketAddr;
 
 use rust_embed::RustEmbed;
-use warp::{http::HeaderValue, reply::Response, Filter, Rejection, Reply};
+use warp::{
+    http::header::CONTENT_TYPE, http::HeaderValue, reply::Response, Filter, Rejection, Reply,
+};
 
 use crate::badges;
 
@@ -22,10 +24,17 @@ pub async fn render_svg_badge(
     factory: badges::Factory,
     input: badges::SvgBadgeInput,
 ) -> Result<impl Reply, Rejection> {
-    let res: Response;
+    let mut res: Response;
 
     match factory.render_svg(input) {
-        Ok(badge) => res = Response::new(badge.into()),
+        Ok(badge) => {
+            res = Response::new(badge.into());
+
+            res.headers_mut().insert(
+                CONTENT_TYPE,
+                HeaderValue::from_static("image/svg+xml;charset=utf-8"),
+            );
+        }
         Err(err) => res = Response::new(err.into()),
     };
 

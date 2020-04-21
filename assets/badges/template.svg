@@ -1,0 +1,27 @@
+{% assign viewBoxWidth = padding_horizontal | times: 4 | plus: title_width | plus: text_width %}
+{% assign min_height = text_height %}
+{% if title_height > text_height %}{% assign min_height = title_height %}{% endif %}
+{% assign viewBoxHeight = padding_vertical | times: 6 | plus: min_height %}
+
+<svg  width="{{ viewBoxWidth | divided_by: 10 }}" height="{{ viewBoxHeight | divided_by: 10 }}"
+      viewBox="0 0 {{ viewBoxWidth }} {{ viewBoxHeight }}" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <rect fill="{{ title_bg_colour }}"
+          width="{{ padding_horizontal | times: 2 | plus: title_width }}"
+          height="{{ viewBoxHeight }}"/>
+    <rect fill="{{ text_bg_colour }}"
+          x="{{ padding_horizontal | times: 2 | plus: title_width }}"
+          width="{{ padding_horizontal | times: 2 | plus: text_width }}"
+          height="{{ viewBoxHeight }}"/>
+  </g>
+  <g fill="{{ title_colour }}" text-anchor="start" font-family="{{ font_face }}" font-size="{{ font_size }}">
+    <text x="{{ padding_horizontal }}"
+          y="{{ padding_vertical | plus: title_height }}"
+          textLength="{{ title_width }}">{{ title }}</text>
+  </g>
+  <g fill="{{ text_colour }}" text-anchor="start" font-family="{{ font_face }}" font-size="{{ font_size }}">
+    <text x="{{ padding_horizontal | times: 3 | plus: title_width }}"
+          y="{{ padding_vertical | plus: text_height }}"
+          textLength="{{ text_width }}">{{ text }}</text>
+  </g>
+</svg>

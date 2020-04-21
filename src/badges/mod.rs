@@ -1,4 +1,9 @@
 use htmlescape as escape;
+use rust_embed::RustEmbed;
+
+#[derive(RustEmbed)]
+#[folder = "assets/badges"]
+struct Asset;
 
 #[derive(Debug, Deserialize)]
 pub struct SvgBadgeInput {
@@ -103,13 +108,19 @@ pub struct FactoryOptions {
 #[derive(Clone)]
 pub struct Factory {
     opts: FactoryOptions,
+    svg_template: String,
 }
 
 impl Factory {
     pub fn new(opts: FactoryOptions) -> Factory {
         info!("building factory");
 
-        Factory { opts }
+        Factory {
+            opts,
+            svg_template: std::str::from_utf8(Asset::get("template.svg").unwrap().as_ref())
+                .unwrap()
+                .into(),
+        }
     }
 
     pub fn default_font_face(&self) -> minutiae::FontFace {
@@ -132,17 +143,54 @@ impl Factory {
             return Err(r.err().unwrap());
         }
 
-        let bbox = self.opts.render_dataset.bounding_box(
-            &format!("{} - {}", input.title, input.text),
+        let title_bbox = self.opts.render_dataset.bounding_box(
+            &input.title,
             minutiae::BoundingBoxRenderOptions {
-                face: "Verdana".to_string(),
-                size: "100".to_string(),
+                face: input.font_face.clone().unwrap(),
+                size: input.font_size.clone().unwrap(),
             },
         );
 
-        match bbox {
-            Some(v) => Ok(format!("{} - {} ({} x {})", input.title, input.text, v[0], v[1]).into()),
-            None => Err("failed to render badge".into()),
+        let text_bbox = self.opts.render_dataset.bounding_box(
+            &input.text,
+            minutiae::BoundingBoxRenderOptions {
+                face: input.font_face.clone().unwrap(),
+                size: input.font_size.clone().unwrap(),
+            },
+        );
+
+        if title_bbox.is_none() || text_bbox.is_none() {
+            return Err("failed to render badge".into());
+        }
+
+        let output = liquid::ParserBuilder::with_stdlib()
+            .build()
+            .unwrap()
+            .parse(&self.svg_template)
+            .unwrap()
+            .render(&liquid::object!({
+                "title": input.title,
+                "title_width": title_bbox.clone().unwrap()[0],
+                "title_height": title_bbox.unwrap()[1],
+                "text": input.text,
+                "text_width": text_bbox.clone().unwrap()[0],
+                "text_height": text_bbox.unwrap()[1],
+                "font_face": input.font_face,
+                "font_size": input.font_size,
+                "title_colour": input.title_colour,
+                "title_bg_colour": input.title_bg_colour,
+                "text_colour": input.text_colour,
+                "text_bg_colour": input.text_bg_colour,
+                "padding_horizontal": input.padding_horizontal,
+                "padding_vertical": input.padding_vertical,
+            }));
+
+        match output {
+            Ok(badge) => Ok(badge),
+            Err(_err) => {
+                error!("{}", _err);
+                Err("failed to render badge".into())
+            }
         }
     }
 }
