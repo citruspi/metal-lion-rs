@@ -2,13 +2,17 @@
 pub struct SvgBadgeInput {
     pub title: String,
     pub text: String,
+    pub title_colour: Option<String>,
+    pub text_colour: Option<String>,
+    pub title_bg_colour: Option<String>,
+    pub text_bg_colour: Option<String>,
     pub font_face: Option<minutiae::FontFace>,
     pub font_size: Option<minutiae::FontSize>,
 }
 
 impl SvgBadgeInput {
     pub fn validate_n_populate(&mut self, factory: &Factory) -> Result<(), String> {
-        self.validate_font(factory)
+        self.validate_font(factory).and(self.validate_colours())
     }
 
     pub fn validate_font(&mut self, f: &Factory) -> Result<(), String> {
@@ -27,6 +31,39 @@ impl SvgBadgeInput {
             true => Ok(()),
             false => Err("unsupported font".into()),
         }
+    }
+
+    pub fn validate_colours(&mut self) -> Result<(), String> {
+        if self.title_colour.is_none() {
+            self.title_colour = Option::from(String::from("#fff"));
+        }
+
+        if self.title_bg_colour.is_none() {
+            self.title_bg_colour = Option::from(String::from("#000"));
+        }
+
+        if self.text_colour.is_none() {
+            self.text_colour = Option::from(String::from("#000"));
+        }
+
+        if self.text_bg_colour.is_none() {
+            self.text_bg_colour = Option::from(String::from("#fff"));
+        }
+
+        for s in vec![
+            self.title_colour.clone(),
+            self.title_bg_colour.clone(),
+            self.text_colour.clone(),
+            self.text_bg_colour.clone(),
+        ] {
+            let colour = s.clone().unwrap();
+
+            if !colour.starts_with("#") {
+                return Err(String::from(format!("invalid colour: {}", colour)));
+            }
+        }
+
+        Ok(())
     }
 }
 
