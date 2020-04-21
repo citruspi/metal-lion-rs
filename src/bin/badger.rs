@@ -24,7 +24,14 @@ async fn main() {
                         .parse()
                         .expect("Failed to parse bind address");
 
-                    badger::web::listen(bind_addr).await;
+                    let factory = badger::badges::Factory::new(badger::badges::FactoryOptions {
+                        render_dataset: minutiae::DataSet::from_file(minutiae::ReadOptions {
+                            filename: args.value_of("minutiae_dataset_path").unwrap().into(),
+                            format: minutiae::Format::JSON,
+                        }),
+                    });
+
+                    badger::web::listen(bind_addr, factory).await;
                 }
                 _ => error!("unrecognized subcommand"),
             }
