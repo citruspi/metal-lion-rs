@@ -1,3 +1,4 @@
-fn hello_world() {
-    println!("Hello, world!");
-}
+#[macro_use]
+extern crate clap;
+
+pub mod cli;
