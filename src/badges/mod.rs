@@ -115,12 +115,18 @@ impl Factory {
     pub fn new(opts: FactoryOptions) -> Factory {
         info!("building factory");
 
-        Factory {
-            opts,
-            svg_template: std::str::from_utf8(Asset::get("template.svg").unwrap().as_ref())
+        let svg_template: String =
+            std::str::from_utf8(Asset::get("template.svg").unwrap().as_ref())
                 .unwrap()
-                .into(),
-        }
+                .into();
+
+        liquid::ParserBuilder::with_stdlib()
+            .build()
+            .unwrap()
+            .parse(&svg_template.clone())
+            .unwrap();
+
+        Factory { opts, svg_template }
     }
 
     pub fn default_font_face(&self) -> minutiae::FontFace {
