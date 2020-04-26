@@ -1,3 +1,4 @@
+use glyph_bbox::dataset as GlyphDataSet;
 use htmlescape as escape;
 use liquid;
 use rust_embed::RustEmbed;
@@ -15,8 +16,8 @@ pub struct SvgBadgeInput {
     pub text_colour: Option<String>,
     pub title_bg_colour: Option<String>,
     pub text_bg_colour: Option<String>,
-    pub font_face: Option<minutiae::FontFace>,
-    pub font_size: Option<minutiae::FontSize>,
+    pub font_face: Option<GlyphDataSet::FontFace>,
+    pub font_size: Option<GlyphDataSet::FontSize>,
     pub padding_horizontal: Option<f64>,
     pub padding_vertical: Option<f64>,
     pub icon: Option<String>,
@@ -128,7 +129,7 @@ impl SvgBadgeInput {
 
 #[derive(Clone)]
 pub struct FactoryOptions {
-    pub render_dataset: minutiae::DataSet,
+    pub render_dataset: GlyphDataSet::DataSet,
 }
 
 #[derive(Clone)]
@@ -155,15 +156,19 @@ impl Factory {
         Factory { opts, svg_template }
     }
 
-    pub fn default_font_face(&self) -> minutiae::FontFace {
+    pub fn default_font_face(&self) -> GlyphDataSet::FontFace {
         self.opts.render_dataset.config.font.faces[0].clone()
     }
 
-    pub fn default_font_size(&self) -> minutiae::FontSize {
+    pub fn default_font_size(&self) -> GlyphDataSet::FontSize {
         self.opts.render_dataset.config.font.sizes[0].clone()
     }
 
-    pub fn supports_font(&self, face: minutiae::FontFace, size: minutiae::FontSize) -> bool {
+    pub fn supports_font(
+        &self,
+        face: GlyphDataSet::FontFace,
+        size: GlyphDataSet::FontSize,
+    ) -> bool {
         self.opts.render_dataset.config.font.faces.contains(&face)
             && self.opts.render_dataset.config.font.sizes.contains(&size)
     }
@@ -185,7 +190,7 @@ impl Factory {
 
         let title_bbox = self.opts.render_dataset.bounding_box(
             &input.title,
-            minutiae::BoundingBoxRenderOptions {
+            GlyphDataSet::BoundingBoxRenderOptions {
                 face: input.font_face.clone().unwrap(),
                 size: input.font_size.clone().unwrap(),
             },
@@ -193,7 +198,7 @@ impl Factory {
 
         let text_bbox = self.opts.render_dataset.bounding_box(
             &input.text,
-            minutiae::BoundingBoxRenderOptions {
+            GlyphDataSet::BoundingBoxRenderOptions {
                 face: input.font_face.clone().unwrap(),
                 size: input.font_size.clone().unwrap(),
             },

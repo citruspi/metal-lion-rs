@@ -52,10 +52,10 @@ name = "badger"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "glyph-bbox",
  "htmlescape",
  "liquid",
  "log 0.4.8",
- "minutiae",
  "pretty_env_logger",
  "rust-embed",
  "serde",
@@ -357,6 +357,17 @@ dependencies = [
  "cfg-if",
  "libc",
  "wasi",
+]
+
+[[package]]
+name = "glyph-bbox"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e862110c4416ed147900550d00d652cd26266216a30db5a547964cf07f604d72"
+dependencies = [
+ "serde",
+ "serde_derive",
+ "serde_json",
 ]
 
 [[package]]
@@ -702,22 +713,6 @@ checksum = "2684d4c2e97d99848d30b324b00c8fcc7e5c897b7cbb5819b09e7c90e8baf212"
 dependencies = [
  "mime 0.3.16",
  "unicase 2.6.0",
-]
-
-[[package]]
-name = "minutiae"
-version = "0.1.0"
-source = "git+https://src.doom.fm/citruspi/minutiae.git#502be6ce5835f457819011ca8bc6625b1d386ee1"
-dependencies = [
- "clap",
- "log 0.4.8",
- "pretty_env_logger",
- "rust-embed",
- "serde",
- "serde_derive",
- "serde_json",
- "tokio",
- "warp",
 ]
 
 [[package]]

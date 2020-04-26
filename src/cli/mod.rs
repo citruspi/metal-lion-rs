@@ -16,11 +16,11 @@ pub fn entrypoint<'b, 'a>() -> App<'a, 'b> {
                         .default_value("127.0.0.1:4352"),
                 )
                 .arg(
-                    Arg::with_name("minutiae_dataset_path")
+                    Arg::with_name("bbox_dataset_path")
                         .takes_value(true)
                         .short("r")
                         .long("render-dataset")
-                        .help("minutiae dataset path")
+                        .help("glyph bounding box dataset path")
                         .required(true),
                 ),
         )

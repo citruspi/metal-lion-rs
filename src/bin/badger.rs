@@ -4,6 +4,7 @@ extern crate log;
 extern crate pretty_env_logger;
 
 use badger;
+use glyph_bbox::dataset;
 use std::net::SocketAddr;
 
 #[tokio::main]
@@ -25,9 +26,9 @@ async fn main() {
                         .expect("Failed to parse bind address");
 
                     let factory = badger::badges::Factory::new(badger::badges::FactoryOptions {
-                        render_dataset: minutiae::DataSet::from_file(minutiae::ReadOptions {
-                            filename: args.value_of("minutiae_dataset_path").unwrap().into(),
-                            format: minutiae::Format::JSON,
+                        render_dataset: dataset::DataSet::from_file(dataset::ReadOptions {
+                            filename: args.value_of("bbox_dataset_path").unwrap().into(),
+                            format: dataset::Format::JSON,
                         }),
                     });
 
