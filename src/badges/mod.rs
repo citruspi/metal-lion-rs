@@ -1,5 +1,7 @@
 use htmlescape as escape;
+use liquid;
 use rust_embed::RustEmbed;
+use simple_icons;
 
 #[derive(RustEmbed)]
 #[folder = "assets/badges"]
@@ -17,6 +19,9 @@ pub struct SvgBadgeInput {
     pub font_size: Option<minutiae::FontSize>,
     pub padding_horizontal: Option<f64>,
     pub padding_vertical: Option<f64>,
+    pub icon: Option<String>,
+    pub icon_colour: Option<String>,
+    pub icon_scale: Option<String>,
 }
 
 impl SvgBadgeInput {
@@ -24,6 +29,7 @@ impl SvgBadgeInput {
         self.validate_font(factory)
             .and(self.validate_colours())
             .and(self.validate_padding())
+            .and(self.validate_icon())
             .and(self.sanitize_input())
     }
 
@@ -32,6 +38,21 @@ impl SvgBadgeInput {
         self.text = escape::encode_minimal(&self.text);
 
         Ok(())
+    }
+
+    pub fn validate_icon(&mut self) -> Result<(), String> {
+        if self.icon.is_none() {
+            return Ok(());
+        }
+
+        if self.icon_scale.is_none() {
+            self.icon_scale = Option::from(String::from("0.9"))
+        }
+
+        match simple_icons::get(&self.icon.clone().unwrap()) {
+            Some(_v) => Ok(()),
+            None => Err(String::from("invalid icon")),
+        }
     }
 
     pub fn validate_padding(&mut self) -> Result<(), String> {
@@ -83,11 +104,16 @@ impl SvgBadgeInput {
             self.text_bg_colour = Option::from(String::from("#fff"));
         }
 
+        if self.icon_colour.is_none() {
+            self.icon_colour = self.title_colour.clone();
+        }
+
         for s in vec![
             self.title_colour.clone(),
             self.title_bg_colour.clone(),
             self.text_colour.clone(),
             self.text_bg_colour.clone(),
+            self.icon_colour.clone(),
         ] {
             let colour = s.clone().unwrap();
 
@@ -142,6 +168,14 @@ impl Factory {
             && self.opts.render_dataset.config.font.sizes.contains(&size)
     }
 
+    pub fn template(&self) -> liquid::Template {
+        liquid::ParserBuilder::with_stdlib()
+            .build()
+            .unwrap()
+            .parse(&self.svg_template)
+            .unwrap()
+    }
+
     pub fn render_svg(&self, mut input: SvgBadgeInput) -> Result<String, String> {
         let r = input.validate_n_populate(self);
 
@@ -169,12 +203,8 @@ impl Factory {
             return Err("failed to render badge".into());
         }
 
-        let output = liquid::ParserBuilder::with_stdlib()
-            .build()
-            .unwrap()
-            .parse(&self.svg_template)
-            .unwrap()
-            .render(&liquid::object!({
+        let output = match input.icon.is_some() {
+            true => self.template().render(&liquid::object!({
                 "title": input.title,
                 "title_width": title_bbox.clone().unwrap()[0],
                 "title_height": title_bbox.unwrap()[1],
@@ -189,7 +219,29 @@ impl Factory {
                 "text_bg_colour": input.text_bg_colour,
                 "padding_horizontal": input.padding_horizontal,
                 "padding_vertical": input.padding_vertical,
-            }));
+                "icon": true,
+                "icon_title": format!("{} icon", input.icon.clone().unwrap()),
+                "icon_path": simple_icons::get(&input.icon.unwrap()).unwrap().path,
+                "icon_colour": input.icon_colour,
+                "icon_scale": input.icon_scale,
+            })),
+            false => self.template().render(&liquid::object!({
+                "title": input.title,
+                "title_width": title_bbox.clone().unwrap()[0],
+                "title_height": title_bbox.unwrap()[1],
+                "text": input.text,
+                "text_width": text_bbox.clone().unwrap()[0],
+                "text_height": text_bbox.unwrap()[1],
+                "font_face": input.font_face,
+                "font_size": input.font_size,
+                "title_colour": input.title_colour,
+                "title_bg_colour": input.title_bg_colour,
+                "text_colour": input.text_colour,
+                "text_bg_colour": input.text_bg_colour,
+                "padding_horizontal": input.padding_horizontal,
+                "padding_vertical": input.padding_vertical,
+            })),
+        };
 
         match output {
             Ok(badge) => Ok(badge),

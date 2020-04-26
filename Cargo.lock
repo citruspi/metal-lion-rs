@@ -61,6 +61,7 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
+ "simple-icons",
  "tokio",
  "warp",
 ]
@@ -1314,6 +1315,12 @@ dependencies = [
  "fake-simd",
  "opaque-debug",
 ]
+
+[[package]]
+name = "simple-icons"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "044220a93935d837f2e7b142af6d674b4666b51ea43924d24c27aff604443271"
 
 [[package]]
 name = "siphasher"
