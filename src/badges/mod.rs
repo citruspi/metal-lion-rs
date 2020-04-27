@@ -11,7 +11,7 @@ struct Asset;
 #[derive(Debug, Deserialize)]
 pub struct SvgBadgeInput {
     pub title: String,
-    pub text: String,
+    pub text: Option<String>,
     pub title_colour: Option<String>,
     pub text_colour: Option<String>,
     pub title_bg_colour: Option<String>,
@@ -36,7 +36,10 @@ impl SvgBadgeInput {
 
     pub fn sanitize_input(&mut self) -> Result<(), String> {
         self.title = escape::encode_minimal(&self.title);
-        self.text = escape::encode_minimal(&self.text);
+
+        if self.text.is_some() {
+            self.text = Some(escape::encode_minimal(&self.text.clone().unwrap()));
+        }
 
         Ok(())
     }
@@ -209,20 +212,24 @@ impl Factory {
             },
         );
 
-        let text_bbox = self.opts.render_dataset.bounding_box(
-            &input.text,
-            GlyphDataSet::BoundingBoxRenderOptions {
-                face: input.font_face.clone().unwrap(),
-                size: input.font_size.clone().unwrap(),
-            },
-        );
+        let text_bbox = if input.text.is_some() {
+            self.opts.render_dataset.bounding_box(
+                &input.text.clone().unwrap(),
+                GlyphDataSet::BoundingBoxRenderOptions {
+                    face: input.font_face.clone().unwrap(),
+                    size: input.font_size.clone().unwrap(),
+                },
+            )
+        } else {
+            None
+        };
 
-        if title_bbox.is_none() || text_bbox.is_none() {
+        if title_bbox.is_none() {
             return Err("failed to render badge".into());
         }
 
-        let output = match input.icon.is_some() {
-            true => self.template().render(&liquid::object!({
+        let output = match (input.icon.is_some(), text_bbox.is_some()) {
+            (true, true) => self.template().render(&liquid::object!({
                 "title": input.title,
                 "title_width": title_bbox.clone().unwrap()[0],
                 "title_height": title_bbox.unwrap()[1],
@@ -242,14 +249,55 @@ impl Factory {
                 "icon_path": simple_icons::get(&input.icon.unwrap()).unwrap().path,
                 "icon_colour": input.icon_colour,
                 "icon_scale": input.icon_scale,
+                "contains_text": true,
             })),
-            false => self.template().render(&liquid::object!({
+            (true, false) => self.template().render(&liquid::object!({
+                "title": input.title,
+                "title_width": title_bbox.clone().unwrap()[0],
+                "title_height": title_bbox.unwrap()[1],
+                "text": "",
+                "contains_text": false,
+                "text_width": 0,
+                "text_height": 0,
+                "font_face": input.font_face,
+                "font_size": input.font_size,
+                "title_colour": input.title_colour,
+                "title_bg_colour": input.title_bg_colour,
+                "text_colour": input.text_colour,
+                "text_bg_colour": input.text_bg_colour,
+                "padding_horizontal": input.padding_horizontal,
+                "padding_vertical": input.padding_vertical,
+                "icon": true,
+                "icon_title": format!("{} icon", input.icon.clone().unwrap()),
+                "icon_path": simple_icons::get(&input.icon.unwrap()).unwrap().path,
+                "icon_colour": input.icon_colour,
+                "icon_scale": input.icon_scale,
+            })),
+            (false, true) => self.template().render(&liquid::object!({
                 "title": input.title,
                 "title_width": title_bbox.clone().unwrap()[0],
                 "title_height": title_bbox.unwrap()[1],
                 "text": input.text,
                 "text_width": text_bbox.clone().unwrap()[0],
                 "text_height": text_bbox.unwrap()[1],
+                "font_face": input.font_face,
+                "font_size": input.font_size,
+                "title_colour": input.title_colour,
+                "title_bg_colour": input.title_bg_colour,
+                "text_colour": input.text_colour,
+                "text_bg_colour": input.text_bg_colour,
+                "padding_horizontal": input.padding_horizontal,
+                "padding_vertical": input.padding_vertical,
+                "contains_text": true,
+            })),
+            (false, false) => self.template().render(&liquid::object!({
+                "title": input.title,
+                "title_width": title_bbox.clone().unwrap()[0],
+                "title_height": title_bbox.unwrap()[1],
+                "text": "",
+                "contains_text": false,
+                "text_width": 0,
+                "text_height": 0,
                 "font_face": input.font_face,
                 "font_size": input.font_size,
                 "title_colour": input.title_colour,

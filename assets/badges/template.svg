@@ -17,6 +17,7 @@
           width="{{ padding_horizontal | times: 2 | plus: title_width }}"
           {% endif %}
           height="{{ viewBoxHeight }}"/>
+    {% if contains_text %}
     <rect fill="{{ text_bg_colour }}"
           {% if icon %}
           x="{{ padding_horizontal | times: 5 | plus: title_width }}"
@@ -25,6 +26,7 @@
           {% endif %}
           width="{{ padding_horizontal | times: 2 | plus: text_width }}"
           height="{{ viewBoxHeight }}"/>
+    {% endif %}
   </g>
   <g fill="{{ title_colour }}" text-anchor="start" font-family="{{ font_face }}" font-size="{{ font_size }}">
     {% if icon %}
@@ -35,6 +37,7 @@
           y="{{ padding_vertical | plus: title_height }}"
           textLength="{{ title_width }}">{{ title }}</text>
   </g>
+  {% if contains_text %}
   <g fill="{{ text_colour }}" text-anchor="start" font-family="{{ font_face }}" font-size="{{ font_size }}">
     {% if icon %}
     <text x="{{ padding_horizontal | times: 6 | plus: title_width }}"
@@ -44,6 +47,7 @@
           y="{{ padding_vertical | plus: text_height }}"
           textLength="{{ text_width }}">{{ text }}</text>
   </g>
+  {% endif %}
   {% if icon %}
   <svg x="{{ padding_horizontal }}" y="{{ padding_vertical | times: 3.5 }}"
        width="{{ title_height | times: icon_scale }}" height="{{ title_height | times: icon_scale }}"
