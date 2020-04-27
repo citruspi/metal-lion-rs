@@ -3,15 +3,15 @@ extern crate log;
 
 extern crate pretty_env_logger;
 
-use badger;
 use glyph_bbox::dataset;
+use metal_lion;
 use std::net::SocketAddr;
 
 #[tokio::main]
 async fn main() {
-    pretty_env_logger::init_custom_env("BADGER_LOG_LEVEL");
+    pretty_env_logger::init_custom_env("METAL_LION_LOG_LEVEL");
 
-    let rt = badger::cli::entrypoint().get_matches();
+    let rt = metal_lion::cli::entrypoint().get_matches();
 
     match rt.subcommand_name() {
         Some(v) => {
@@ -25,14 +25,15 @@ async fn main() {
                         .parse()
                         .expect("Failed to parse bind address");
 
-                    let factory = badger::badges::Factory::new(badger::badges::FactoryOptions {
-                        render_dataset: dataset::DataSet::from_file(dataset::ReadOptions {
-                            filename: args.value_of("bbox_dataset_path").unwrap().into(),
-                            format: dataset::Format::JSON,
-                        }),
-                    });
+                    let factory =
+                        metal_lion::badges::Factory::new(metal_lion::badges::FactoryOptions {
+                            render_dataset: dataset::DataSet::from_file(dataset::ReadOptions {
+                                filename: args.value_of("bbox_dataset_path").unwrap().into(),
+                                format: dataset::Format::JSON,
+                            }),
+                        });
 
-                    badger::web::listen(bind_addr, factory).await;
+                    metal_lion::web::listen(bind_addr, factory).await;
                 }
                 _ => error!("unrecognized subcommand"),
             }

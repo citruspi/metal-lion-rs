@@ -48,25 +48,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8aac770f1885fd7e387acedd76065302551364496e46b3dd00860b2f8359b9d"
 
 [[package]]
-name = "badger"
-version = "0.1.0"
-dependencies = [
- "clap",
- "glyph-bbox",
- "htmlescape",
- "liquid",
- "log 0.4.8",
- "pretty_env_logger",
- "rust-embed",
- "serde",
- "serde_derive",
- "serde_json",
- "simple-icons",
- "tokio",
- "warp",
-]
-
-[[package]]
 name = "base64"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -677,6 +658,25 @@ name = "memchr"
 version = "2.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3728d817d99e5ac407411fa471ff9800a778d88a24685968b36824eaf4bee400"
+
+[[package]]
+name = "metal-lion"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "glyph-bbox",
+ "htmlescape",
+ "liquid",
+ "log 0.4.8",
+ "pretty_env_logger",
+ "rust-embed",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "simple-icons",
+ "tokio",
+ "warp",
+]
 
 [[package]]
 name = "mime"

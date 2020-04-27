@@ -1,7 +1,7 @@
 use clap::{App, Arg, SubCommand};
 
 pub fn entrypoint<'b, 'a>() -> App<'a, 'b> {
-    App::new("badger")
+    App::new("metal-lion")
         .version(crate_version!())
         .author("Mihir Singh (@citruspi)")
         .subcommand(
