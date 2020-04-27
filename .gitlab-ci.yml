@@ -41,6 +41,6 @@ docker:
   stage: build
   image: img.doom.fm/build/docker:latest
   before_script:
-    - echo "FROM debian:stable\nCOPY target/release/metal-lion /bin/metal-lion\nENTRYPOINT [\"/bin/metal-lion\"]" > Dockerfile
+    - echo -e "FROM debian:stable\nCOPY target/release/metal-lion /bin/metal-lion\nENTRYPOINT [\"/bin/metal-lion\"]" > Dockerfile
   script:
     - sh /usr/local/bin/build-image
