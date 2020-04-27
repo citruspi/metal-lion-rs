@@ -11,13 +11,23 @@ use crate::badges;
 #[folder = "assets/web"]
 struct Asset;
 
-pub async fn serve_file(path: &str, content_type: &str) -> Result<impl Reply, Rejection> {
-    let asset = Asset::get(path).ok_or_else(warp::reject::not_found)?;
+pub fn render_index(f: badges::Factory) -> String {
+    let template: String = std::str::from_utf8(Asset::get("index.html").unwrap().as_ref())
+        .unwrap()
+        .into();
 
-    let mut res = Response::new(asset.into());
-    res.headers_mut()
-        .insert("Content-Type", HeaderValue::from_str(content_type).unwrap());
-    Ok(res)
+    liquid::ParserBuilder::with_stdlib()
+        .build()
+        .unwrap()
+        .parse(&template)
+        .unwrap()
+        .render(&liquid::object!({
+            "font_faces": format!("[{}]", f.font_faces().join(", ")),
+            "font_sizes": format!("[{}]", f.font_sizes().join(", ")),
+            "default_font_face": f.default_font_face(),
+            "default_font_size": f.default_font_size(),
+        }))
+        .unwrap()
 }
 
 pub async fn render_svg_badge(
@@ -42,11 +52,13 @@ pub async fn render_svg_badge(
 }
 
 pub async fn listen(bind_addr: SocketAddr, factory: badges::Factory) {
-    let index_html = warp::path::end().and_then(|| serve_file("index.html", "text/html"));
+    let index_html = render_index(factory.clone());
+
+    let index_page = warp::path::end().map(move || warp::reply::html(index_html.clone()));
 
     let svg_badge = warp::path!("v1" / "badge.svg")
         .and(warp::query::<badges::SvgBadgeInput>())
         .and_then(move |input| render_svg_badge(factory.clone(), input));
 
-    warp::serve(index_html.or(svg_badge)).run(bind_addr).await
+    warp::serve(index_page.or(svg_badge)).run(bind_addr).await
 }

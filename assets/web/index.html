@@ -28,12 +28,21 @@
             }
 
             .sample-badges {
-                background-color: #8e8e93;
+                background-color: rgba(142, 142, 147, 0.29);
                 display: flex;
                 flex-wrap: wrap;
                 align-items: center;
                 justify-content: space-between;
                 padding: 0.5rem;
+                margin-top: 1.5rem;
+                margin-bottom: -5rem;
+            }
+
+            .blockquote {
+                margin-top: 1rem;
+                margin-bottom: -1rem;
+                background-color: rgba(142, 142, 147, 0.29);
+                padding: 1.5rem;
             }
 
             .sample-badges > img {
@@ -43,6 +52,43 @@
             .logo {
                 font-weight: bold;
                 line-height: 0.7;
+            }
+
+            .config-options.server, .config-options.badges {
+                width: 100%;
+            }
+
+            @media only screen and (min-width: 1200px) {
+                .config-options.server {
+                    width: 40%;
+                }
+
+                .config-options.badges {
+                    width: 60%;
+                }
+            }
+
+            thead > tr > td {
+                text-decoration: underline;
+                font-weight: bold;
+                padding-bottom: 1rem;
+            }
+
+            td
+            {
+                padding-right: 3rem;
+            }
+
+            tr {
+                font-size: 1.4rem;
+            }
+
+            .true {
+                color: #2ecc71;
+            }
+
+            .false {
+                color: #c0392b;
             }
         </style>
     </head>
@@ -57,9 +103,6 @@ $$ / $$ / $$ |$$$$$$$$ | $$ |     $$$$$$$ |$$ |      $$ |$$ |$$ /  $$ |$$ |  $$ 
 $$ | $$ | $$ |$$   ____| $$ |$$\ $$  __$$ |$$ |      $$ |$$ |$$ |  $$ |$$ |  $$ |<br>
 $$ | $$ | $$ |\$$$$$$$\  \$$$$  |\$$$$$$$ |$$ |      $$ |$$ |\$$$$$$  |$$ |  $$ |<br>
 \__| \__| \__| \_______|  \____/  \_______|\__|      \__|\__| \______/ \__|  \__|</span>
-
-        <h2>Sample Badges</h2>
-        <hr>
         <div class="sample-badges">
             <img src="/v1/badge.svg?title=Vanilla&text=Badge&font_size=150"/>
             <img src="/v1/badge.svg?icon=App%20Store&title=App Store&text=Download&font_size=150&title_bg_colour=%230D96F6"/>
@@ -73,5 +116,128 @@ $$ | $$ | $$ |\$$$$$$$\  \$$$$  |\$$$$$$$ |$$ |      $$ |$$ |\$$$$$$  |$$ |  $$ 
             <img src="/v1/badge.svg?icon=Alpine%20Linux&title=apk&text=my-pkg&font_size=150&text_bg_colour=%230D597F&text_colour=%23fff"/>
         </div>
 
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between">
+            <div class="config-options server">
+                <h2>Server Configuration</h2>
+                <hr>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Setting</td>
+                            <td>Values</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Endpoint</td>
+                            <td><code>/v1/badge.svg</code></td>
+                        </tr>
+                        <tr>
+                            <td>Font Faces</td>
+                            <td>{{ font_faces }}</td>
+                        </tr>
+                        <tr>
+                            <td>Font Sizes</td>
+                            <td>{{ font_sizes }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="config-options badges">
+                <h2>Badge Configuration</h2>
+                <hr>
+                <div class="blockquote">All config options should be URI-encoded. Hint &mdash; <code>%20</code> for space and <code>%23</code> for <code>#</code>.</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Setting</td>
+                            <td>Required</td>
+                            <td>Default</td>
+                            <td>Type &amp; Notes</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>title</td>
+                            <td class="true">True</td>
+                            <td>n/a</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>text</td>
+                            <td class="true">True</td>
+                            <td>n/a</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>icon</td>
+                            <td class="false">False</td>
+                            <td></td>
+                            <td>Title from <a href="#">Simple Icons</a></td>
+                        </tr>
+                        <tr>
+                            <td>font_face</td>
+                            <td class="false">False</td>
+                            <td>{{ default_font_face }}</td>
+                            <td>see server configuration</td>
+                        </tr>
+                        <tr>
+                            <td>font_size</td>
+                            <td class="false">False</td>
+                            <td>{{ default_font_size }}</td>
+                            <td>see server configuration</td>
+                        </tr>
+                        <tr>
+                            <td>title_colour</td>
+                            <td class="false">False</td>
+                            <td>#fff</td>
+                            <td>hex colour</td>
+                        </tr>
+                        <tr>
+                            <td>title_bg_colour</td>
+                            <td class="false">False</td>
+                            <td>#000</td>
+                            <td>hex colour</td>
+                        </tr>
+                        <tr>
+                            <td>text_colour</td>
+                            <td class="false">False</td>
+                            <td>#000</td>
+                            <td>hex colour</td>
+                        </tr>
+                        <tr>
+                            <td>text_bg_colour</td>
+                            <td class="false">False</td>
+                            <td>#fff</td>
+                            <td>hex colour</td>
+                        </tr>
+                        <tr>
+                            <td>icon_colour</td>
+                            <td class="false">False</td>
+                            <td>%title_colour</td>
+                            <td>hex colour</td>
+                        </tr>
+                        <tr>
+                            <td>icon_scale</td>
+                            <td class="false">False</td>
+                            <td>0.9</td>
+                            <td>float</td>
+                        </tr>
+                        <tr>
+                            <td>padding_horizontal</td>
+                            <td class="false">False</td>
+                            <td>%font_size / 2.0</td>
+                            <td>float</td>
+                        </tr>
+                        <tr>
+                            <td>padding_vertical</td>
+                            <td class="false">False</td>
+                            <td>%font_size / 8.0</td>
+                            <td>float</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </body>
 </html>

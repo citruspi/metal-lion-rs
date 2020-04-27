@@ -156,6 +156,14 @@ impl Factory {
         Factory { opts, svg_template }
     }
 
+    pub fn font_faces(&self) -> GlyphDataSet::FontFaces {
+        self.opts.render_dataset.config.font.faces.clone()
+    }
+
+    pub fn font_sizes(&self) -> GlyphDataSet::FontSizes {
+        self.opts.render_dataset.config.font.sizes.clone()
+    }
+
     pub fn default_font_face(&self) -> GlyphDataSet::FontFace {
         self.opts.render_dataset.config.font.faces[0].clone()
     }
