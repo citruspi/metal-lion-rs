@@ -16,6 +16,13 @@ pub fn entrypoint<'b, 'a>() -> App<'a, 'b> {
                         .default_value("127.0.0.1:4352"),
                 )
                 .arg(
+                    Arg::with_name("host")
+                        .takes_value(true)
+                        .short("H")
+                        .long("host")
+                        .help("public host"),
+                )
+                .arg(
                     Arg::with_name("bbox_dataset_path")
                         .takes_value(true)
                         .short("r")

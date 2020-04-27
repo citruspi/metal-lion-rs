@@ -25,9 +25,18 @@ async fn main() {
                         .parse()
                         .expect("Failed to parse bind address");
 
+                    let host: String;
+
+                    match args.value_of("host") {
+                        Some(v) => host = v.to_owned(),
+                        None => {
+                            host = format!("http://{}", args.value_of("bind").unwrap().to_owned())
+                        }
+                    }
+
                     let factory =
                         metal_lion::badges::Factory::new(metal_lion::badges::FactoryOptions {
-                            host: format!("http://{}", args.value_of("bind").unwrap().to_owned()),
+                            host,
                             render_dataset: dataset::DataSet::from_file(dataset::ReadOptions {
                                 filename: args.value_of("bbox_dataset_path").unwrap().into(),
                                 format: dataset::Format::JSON,
