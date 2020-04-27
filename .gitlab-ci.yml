@@ -5,18 +5,23 @@ default:
     - shared-exec-docker
 
 stages:
-  - check
-  - assets
-  - build
+  - test
 
-rust_fmt:
-  stage: check
+cargo fmt:
+  stage: test
   before_script:
     - rustup component add rustfmt
   script:
     - cargo fmt -- --check
 
-compile:
-  stage: build
+cargo test:
+  stage: test
   script:
-    - cargo build
+    - cargo test
+
+publish dry run:
+  stage: test
+  before_script:
+    - cargo login $CRATES_IO_TOKEN
+  script:
+    - cargo publish --dry-run
