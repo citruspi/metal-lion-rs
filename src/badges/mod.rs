@@ -197,6 +197,25 @@ impl Factory {
             .unwrap()
     }
 
+    pub fn render_error_badge(&self, s: String) -> String {
+        self.render_svg(SvgBadgeInput {
+            title: "error".to_string(),
+            text: Option::from(s),
+            title_colour: None,
+            text_colour: None,
+            title_bg_colour: Option::from(String::from("#c0392b")),
+            text_bg_colour: None,
+            font_face: None,
+            font_size: None,
+            padding_horizontal: None,
+            padding_vertical: None,
+            icon: Option::from(String::from("Sentry")),
+            icon_colour: None,
+            icon_scale: None,
+        })
+        .unwrap()
+    }
+
     pub fn render_svg(&self, mut input: SvgBadgeInput) -> Result<String, String> {
         let r = input.validate_n_populate(self);
 

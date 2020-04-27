@@ -47,7 +47,14 @@ pub async fn render_svg_badge(
                 HeaderValue::from_static("image/svg+xml;charset=utf-8"),
             );
         }
-        Err(err) => res = Response::new(err.into()),
+        Err(err) => {
+            res = Response::new(factory.render_error_badge(err).into());
+
+            res.headers_mut().insert(
+                CONTENT_TYPE,
+                HeaderValue::from_static("image/svg+xml;charset=utf-8"),
+            );
+        }
     };
 
     Ok(res)
