@@ -6,6 +6,8 @@ default:
 
 stages:
   - test
+  - compile
+  - build
 
 cargo fmt:
   stage: test
@@ -25,3 +27,20 @@ publish dry run:
     - cargo login $CRATES_IO_TOKEN
   script:
     - cargo publish --dry-run
+
+binary:
+  stage: compile
+  script:
+    - cargo build --release
+  artifacts:
+    paths:
+      - target/release/metal-lion
+    expire_in: 1h
+
+docker:
+  stage: build
+  image: img.doom.fm/build/docker:latest
+  before_script:
+    - echo "FROM debian:stable\nCOPY target/release/metal-lion /bin/metal-lion\nENTRYPOINT [\"/bin/metal-lion\"]" > Dockerfile
+  script:
+    - sh /usr/local/bin/build-image
