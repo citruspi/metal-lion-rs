@@ -6,9 +6,9 @@
             body {
                 background-color: #111;
                 color: #f1c40f;
-                display: block;
                 font-family: monospace;
                 white-space: pre;
+                max-width: 100vw;
 
                 padding: 1rem 4rem;
                 font-size: 1.5rem;
@@ -17,6 +17,27 @@
             a {
                 color: #1abc9c;
                 text-decoration: underline;
+            }
+
+            hr {
+                margin-bottom: -1rem;
+            }
+
+            h2 {
+                margin-bottom: -2rem;
+            }
+
+            .sample-badges {
+                background-color: #8e8e93;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.5rem;
+            }
+
+            .sample-badges > img {
+                padding: 0.5rem 0rem;
             }
 
             .logo {
@@ -36,5 +57,21 @@ $$ / $$ / $$ |$$$$$$$$ | $$ |     $$$$$$$ |$$ |      $$ |$$ |$$ /  $$ |$$ |  $$ 
 $$ | $$ | $$ |$$   ____| $$ |$$\ $$  __$$ |$$ |      $$ |$$ |$$ |  $$ |$$ |  $$ |<br>
 $$ | $$ | $$ |\$$$$$$$\  \$$$$  |\$$$$$$$ |$$ |      $$ |$$ |\$$$$$$  |$$ |  $$ |<br>
 \__| \__| \__| \_______|  \____/  \_______|\__|      \__|\__| \______/ \__|  \__|</span>
+
+        <h2>Sample Badges</h2>
+        <hr>
+        <div class="sample-badges">
+            <img src="/v1/badge.svg?title=Vanilla&text=Badge&font_size=150"/>
+            <img src="/v1/badge.svg?icon=App%20Store&title=App Store&text=Download&font_size=150&title_bg_colour=%230D96F6"/>
+            <img src="/v1/badge.svg?icon=CircleCI&title=build&text=passing&font_size=150&text_bg_colour=%2327ae60&text_colour=%23fff"/>
+            <img src="/v1/badge.svg?icon=Snapchat&title=Follow&text=@citruspi&font_size=150&text_bg_colour=%23FFFC00"/>
+            <img src="/v1/badge.svg?icon=GitHub&title=Stars&text=5.9K&font_size=150&title_bg_colour=%23181717"/>
+            <img src="/v1/badge.svg?icon=Docker&title=Docker&text=user/image&font_size=150&title_bg_colour=%232496ED"/>
+            <img src="/v1/badge.svg?icon=Terraform&title=Provider&text=Amazon%20Web%20Services&font_size=150&text_bg_colour=%23623ce4&text_colour=%23fff"/>
+            <img src="/v1/badge.svg?icon=Open%20Source%20Initiative&title=License&text=Public%20Domain&font_size=150&title_bg_colour=%233DA639&text_bg_colour=%23ecf0f1"/>
+            <img src="/v1/badge.svg?icon=Twitter&title=Follow&text=@citruspi&font_size=150&text_bg_colour=%23007aff&text_colour=%23fff"/>
+            <img src="/v1/badge.svg?icon=Alpine%20Linux&title=apk&text=my-pkg&font_size=150&text_bg_colour=%230D597F&text_colour=%23fff"/>
+        </div>
+
     </body>
 </html>
