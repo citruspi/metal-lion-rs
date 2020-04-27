@@ -27,6 +27,7 @@ async fn main() {
 
                     let factory =
                         metal_lion::badges::Factory::new(metal_lion::badges::FactoryOptions {
+                            host: format!("http://{}", args.value_of("bind").unwrap().to_owned()),
                             render_dataset: dataset::DataSet::from_file(dataset::ReadOptions {
                                 filename: args.value_of("bbox_dataset_path").unwrap().into(),
                                 format: dataset::Format::JSON,

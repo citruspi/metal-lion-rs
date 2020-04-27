@@ -130,6 +130,7 @@ impl SvgBadgeInput {
 #[derive(Clone)]
 pub struct FactoryOptions {
     pub render_dataset: GlyphDataSet::DataSet,
+    pub host: String,
 }
 
 #[derive(Clone)]
@@ -154,6 +155,10 @@ impl Factory {
             .unwrap();
 
         Factory { opts, svg_template }
+    }
+
+    pub fn render_endpoint(&self) -> String {
+        format!("{}/v1/badge.svg", self.opts.host)
     }
 
     pub fn font_faces(&self) -> GlyphDataSet::FontFaces {

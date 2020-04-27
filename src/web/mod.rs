@@ -26,6 +26,7 @@ pub fn render_index(f: badges::Factory) -> String {
             "font_sizes": format!("[{}]", f.font_sizes().join(", ")),
             "default_font_face": f.default_font_face(),
             "default_font_size": f.default_font_size(),
+            "render_endpoint": f.render_endpoint(),
             "version": crate_version!(),
         }))
         .unwrap()
