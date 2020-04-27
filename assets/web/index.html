@@ -137,16 +137,12 @@ $$ | $$ | $$ |\$$$$$$$\  \$$$$  |\$$$$$$$ |$$ |      $$ |$$ |\$$$$$$  |$$ |  $$ 
                             <td>Endpoint</td>
                             <td><code>/v1/badge.svg</code></td>
                         </tr>
-                        <tr>
-                            <td>Font Faces</td>
-                            <td>{{ font_faces }}</td>
-                        </tr>
-                        <tr>
-                            <td>Font Sizes</td>
-                            <td>{{ font_sizes }}</td>
-                        </tr>
                     </tbody>
                 </table>
+<span style="margin-left: 2px">Font {
+    faces: {{ font_faces }},
+    size: {{ font_sizes }}
+}</span>
             </div>
             <div class="config-options badges">
                 <h2>Badge Configuration</h2>
