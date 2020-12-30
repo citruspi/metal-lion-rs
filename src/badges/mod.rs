@@ -209,7 +209,7 @@ impl Factory {
             font_size: None,
             padding_horizontal: None,
             padding_vertical: None,
-            icon: Option::from(String::from("Sentry")),
+            icon: None,
             icon_colour: None,
             icon_scale: None,
         })
