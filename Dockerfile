@@ -1,4 +1,4 @@
-FROM rust
+FROM rust:1.48.0
 
 RUN mkdir /source
 
