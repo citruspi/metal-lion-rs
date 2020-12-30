@@ -5,6 +5,7 @@ default:
 stages:
   - test
   - build
+  - release
 
 cargo fmt:
   stage: test
@@ -25,8 +26,17 @@ publish dry run:
   script:
     - cargo publish --dry-run
 
-docker:
+compile:
   stage: build
+  script:
+    - cargo build --release
+  artifacts:
+    paths:
+      - target/release/metal-lion
+    expire_in: 1 hour
+
+docker:
+  stage: release
   image: img.doom.fm/build/docker:latest
   script:
     - sh /usr/local/bin/build-image
